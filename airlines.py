@@ -1,5 +1,11 @@
 import random
 
+# @TODO Zmiana liczby analizowanych dni obslugi (wierszy) (czyli dni np na 14)
+# @TODO Sprawdzenie czy ostatni i pierwszy dzien spelniaja warunki zadania (tzn czy mozna zapetlic przydzial na kolejne dni aby zostaly spelnione 
+# warunki zadania
+# @TODO dodanie rysowania wartosci najlepszej wartosci funkcji celu w kolejnych pokoleniach
+
+
 
 class PlaneAllocation(object):
     def __init__(self, file):
@@ -63,6 +69,10 @@ class PlaneAllocation(object):
 
             self.guys.append(guy)
 
+
+
+# @TODO sprawdzenie krzyzowania w losowych miejscach(ze nie centralnie na pol i mozna "kroic" w poziomie")
+# i co robic wtedy z sigma
     """krzyzowanie - nowy osobnik posiada pierwsza polowe
         wierszow od ojca a droga od matki"""
     def crossing(self, male, female):
@@ -85,7 +95,7 @@ class PlaneAllocation(object):
 
     """mutacja - w kazdym wierszu nowego osobnika jest
         losowanych od nowa kilka wartosci, w zaleznosci od
-        parametru osobnika"""
+        parametru osobnika - sigma"""
     def mutation(self, child):
         for v in child:
             if v['sigma'] == 0:
@@ -111,6 +121,7 @@ class PlaneAllocation(object):
 
         return s
 
+    # @TODO dodanie opcji algortm ruletki
     """do nastepnego pokolenia wybierane jest mi najlepszych
         osobnikow"""
     def population_choice(self, mi):
@@ -134,6 +145,8 @@ class PlaneAllocation(object):
                 j = 0
 
             best = self.cost_sum(self.guys[0])
+            # tutaj mozna dodac do listy (dla plotownia)
+            print(best)
             i += 1
 
 
@@ -142,7 +155,7 @@ if __name__ == '__main__':
 	allocator.run_algorithm(200, 80, 1501, 1000)
 
 	""" wyswietlenie najlepszego rozwiazania """
-	print("przydzial załóg(nr wiersza mowi ktory to samolot):")
+	print("przydzial załóg(nr kolumny mowi ktory to samolot):")
 	for v in allocator.guys[0]:
 		print(v['x'])
 
