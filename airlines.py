@@ -1,5 +1,14 @@
-import random
 
+# coding: utf-8
+
+# In[1]:
+
+
+import random
+import os
+import matplotlib.pyplot as plt
+
+os.chdir("C:/Users/jacdub/Desktop/PSZT-airlines-master")
 # @TODO Zmiana liczby analizowanych dni obslugi (wierszy) (czyli dni np na 14)
 # @TODO Sprawdzenie czy ostatni i pierwszy dzien spelniaja warunki zadania (tzn czy mozna zapetlic przydzial na kolejne dni aby zostaly spelnione 
 # warunki zadania
@@ -64,7 +73,7 @@ class PlaneAllocation(object):
                     state = 1
 
                 j += 1
-                v['sigma'] = random.choice(range(int(self.N/2)))
+                v['sigma'] = random.choice(range(int(self.N)))
                 guy.append(v)
 
             self.guys.append(guy)
@@ -77,14 +86,15 @@ class PlaneAllocation(object):
         wierszow od ojca a droga od matki"""
     def crossing(self, male, female):
         child = []
-        for i in range(int(self.N / 2)):
+        division_line=random.randint(1, 8)
+        for i in range(division_line):
             v = dict()
             v['x'] = male[i]['x']
             v['sigma'] = male[i]['sigma']
 
             child.append(v)
 
-        for i in range(int(self.N / 2), self.N):
+        for i in range(division_line, self.N):
             v = dict()
             v['x'] = female[i]['x']
             v['sigma'] = female[i]['sigma']
@@ -132,6 +142,7 @@ class PlaneAllocation(object):
         i = 0
         j = 0
         best = 0
+        results=[]
         self.generate_init_population(mi)
         while i < max_iter:
             self.reproduction(lambda_)
@@ -145,14 +156,20 @@ class PlaneAllocation(object):
                 j = 0
 
             best = self.cost_sum(self.guys[0])
-            # tutaj mozna dodac do listy (dla plotownia)
-            print(best)
+            results.append(best)
+            if i%500==0:
+                print("Working on it...",i,"->",best)
             i += 1
+        plt.figure(figsize=(7,7))
+        plt.plot(results)
+        plt.ylabel('Koszt')
+        plt.xlabel('Iteracje')
+        plt.show()
 
 
 if __name__ == '__main__':
 	allocator = PlaneAllocation("input.txt")
-	allocator.run_algorithm(200, 80, 1501, 1000)
+	allocator.run_algorithm(1000, 500, 30000, 3000)
 
 	""" wyswietlenie najlepszego rozwiazania """
 	print("przydzial załóg(nr kolumny mowi ktory to samolot):")
@@ -160,4 +177,5 @@ if __name__ == '__main__':
 		print(v['x'])
 
 	print("koszt: " + str(allocator.cost_sum(allocator.guys[0])))
+
 
