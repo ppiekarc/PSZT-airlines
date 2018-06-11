@@ -26,6 +26,7 @@ class PlaneAllocation(object):
     def __init__(self, file):
         self.M = None #wszystkie dostępne załogi
         self.N = None #samoloty
+        self.num_of_days = None
         self.crews = dict()
         self.guys = []
         self.read_input(file)
@@ -33,6 +34,7 @@ class PlaneAllocation(object):
     def read_input(self, file):
         with open(file, 'r') as f:
             line = f.readline().split()
+            self.num_of_days = int(line.pop())
             self.M = int(line.pop())
             self.N = int(line.pop())
             for i in range(0, self.M):
@@ -59,7 +61,7 @@ class PlaneAllocation(object):
             guy = []
             j = 0
             state = 0
-            while j < self.N:
+            while j < self.num_of_days:
                 v = dict()
                 v['x'] = random.sample(range(self.M), self.N)
                 if state == 2:
@@ -102,7 +104,7 @@ class PlaneAllocation(object):
 
             child.append(v)
 
-        for i in range(division_line, self.N):
+        for i in range(division_line, self.num_of_days):
             v = dict()
             v['x'] = female[i]['x']
             v['sigma'] = female[i]['sigma']
@@ -134,7 +136,7 @@ class PlaneAllocation(object):
 
     def cost_sum(self, elem):
         s = 0
-        for j in range(self.N):
+        for j in range(self.num_of_days):
             s += sum(self.crews[i] for i in elem[j]['x'])
 
         return s
